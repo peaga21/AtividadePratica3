@@ -17,7 +17,7 @@ float calcValor (float preco, float qtd);
 int fun_invalidos (float prEta, float prGas, float prAdit, float tFila);
 int fun_escreva();
 char Fun_Tcar();
-
+//
 //MAIN
 int main (void) {
 
