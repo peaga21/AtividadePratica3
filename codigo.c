@@ -22,9 +22,9 @@ char Fun_Tcar();
 int main (void) {
 
   //VARIÁVEIS
-	float  prEta = 1, prGas = 1, prAdit = 1, qtdEta, qtdGas, qtdAdit, valRec, cAtendido, tFila = 1;
+	float  prEta = 1, prGas = 1, prAdit = 1, qtdEta, qtdGas, qtdAdit, valRec, cAtendido, tFila = 1; 
   float etaRestante = 200, gasRestante = 200, aditRestante = 200;
-  int fila = 0, opcao, relatorio, menu, tam, cont = 1;
+int fila = 0, opcao, relatorio, menu, tam, cont = 1; // ⚠️ ERRO CRÍTICO: variável 'tam' não inicializada - usar #define TAM_MAX 100
 
   printf("---------------------------------------------------------------------------------------------------------\n");
   printf("Bem vindo ao programa de abastecimento do posto de gasolina! Nosso programa facilita o abastecimento para nossos clientes.\n\n                     \n");
@@ -43,12 +43,13 @@ int main (void) {
 	scanf  ("%f", &prAdit);
 	
   printf("\nInforme o tamanho da fila que o estabelecimento suportará: ");
-  scanf  ("%2f", &tFila);
+scanf  ("%2f", &tFila); // 🔍 PROBLEMA: formatação "%2f" incorreta para float - usar "%f"
+
   
   }
   while (prEta < 0 || prGas < 0 || prAdit < 0 || tFila <= 0);
 
-  struct Tcarro carros [tam];
+struct Tcarro carros [tam]; // 🚨 ERRO GRAVE: 'tam' não inicializado! Usar: struct Tcarro carros[100]; ou alocação dinâmica
   do {
 
   menu = fun_escreva ();
@@ -56,7 +57,7 @@ int main (void) {
   switch (menu){
     case 1:
       system("clear");
-      if (fila <= tFila) {
+ if (fila <= tFila) { // 💡 MELHORIA: contador 'cont' começa em 1 mas array em 0 - pode causar overflow
         fun_incre(&fila);
         flush_in ();
         
@@ -83,7 +84,7 @@ int main (void) {
     case 2:
       system("clear");
 
-      if (fila > 0) {
+    if (fila > 0) { // ⚠️ FALTA: verificar se há combustível suficiente nos tanques antes de vender
         printf ("\nDigite a quantidade vendida do etanol: ");
       	scanf  ("%f", &qtdEta);
         etaRestante = etaRestante - qtdEta;
@@ -169,7 +170,7 @@ float calcValor (float preco, float qtd) {
 	return preco*qtd;
 }
 
-int fun_invalidos (float prEta, float prGas, float prAdit, float tFila) {
+int fun_invalidos (float prEta, float prGas, float prAdit, float tFila) { // 🔍 PROBLEMA: função retorna printf() - deve retornar 0/1
   if (prEta < 0) 
      printf("\nValor do preço do Etanol inválido!\nDigite o preço novamente\n");
   if (prGas < 0) 
@@ -181,7 +182,7 @@ int fun_invalidos (float prEta, float prGas, float prAdit, float tFila) {
   return 0;
 }
 
-int fun_escreva (int opcao) {
+int fun_escreva (int opcao) { // 💡 MELHORIA: parâmetro 'opcao' não é usado - remover ou renomear função
   printf("\nPrograma para melhor experência dos clientes do posto de gasolina\n");
   printf("------------------------------------------------------------------\n");
   printf("1 - Adicionar um carro na fila\n2 - Abastecimento\n3 - Chamar o próximo\n4 - Relatórios\n5 - Encerrar\n");
@@ -191,7 +192,7 @@ int fun_escreva (int opcao) {
   return opcao;
 }
 
-void flush_in(){ 
+void flush_in(){ // ✅ FUNÇÃO CORRETA: mas poderia ser mais elegante com while getchar()
     int ch;
     while( (ch = fgetc(stdin)) != EOF && ch != '\n' ){} 
 }
@@ -207,3 +208,11 @@ int fun_decre (int *fila){
   printf ("Número de carros na fila: %d\n", *fila);
  return *fila;
  }
+
+// ========= FIM DO CÓDIGO =========
+// 📋 RESUMO DE CORREÇÕES NECESSÁRIAS:
+// 1. Inicializar variável 'tam' ou usar #define
+// 2. Corrigir formatação scanf %2f para %f
+// 3. Validar estoque de combustível antes de vender
+// 4. Corrigir retorno da função fun_invalidos
+// 5. Melhorar nomes de funções (fun_xxx não é descritivo)
